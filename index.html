@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PMP Mock Exam Center</title>
+<style>
+:root{
+  --bg:#ffffff; --surface:#f4f6f9; --surface2:#e9edf3;
+  --border:#d7dee6; --border2:#aab6c4;
+  --text:#14213d; --text2:#3c4a5e; --text3:#6b7787;
+  --accent:#123a73; --accent-light:#e7edf7; --accent-2:#1f5fb8;
+  --toolbar-bg:#0d2748; --toolbar-text:#ffffff;
+  --radius:12px;
+}
+body.dark{
+  --bg:#0e1420; --surface:#151d2c; --surface2:#1c2638;
+  --border:#2a3450; --border2:#3d4d70;
+  --text:#e7ecf5; --text2:#c3cbdb; --text3:#8b96ac;
+  --accent:#5b8fd6; --accent-light:#182338; --accent-2:#6ba0ea;
+  --toolbar-bg:#0a0f1a; --toolbar-text:#eef2fa;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:15px;}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  min-height:100vh; transition:background .2s, color .2s;
+}
+@media(min-width:1px){
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap');
+}
+a{text-decoration:none; color:inherit;}
+button{cursor:pointer; font-family:inherit;}
+.hidden{display:none !important;}
+
+.wrap{max-width:920px; margin:0 auto; padding:36px 18px 60px;}
+.brand{
+  display:flex; align-items:center; gap:16px;
+  background:var(--toolbar-bg); color:var(--toolbar-text);
+  padding:22px 26px; border-radius:var(--radius); margin-bottom:24px;
+}
+.brand .brand-badge{
+  width:52px; height:52px; border-radius:10px;
+  background:linear-gradient(135deg, var(--accent-2), var(--accent));
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:13px; letter-spacing:0.5px; flex:0 0 auto;
+}
+.brand h1{font-size:21px; font-weight:700; margin-bottom:2px;}
+.brand p{font-size:12px; color:#aebbd1; letter-spacing:0.3px; font-family:'IBM Plex Mono',monospace;}
+.dark-toggle{
+  background:rgba(255,255,255,0.14); color:#fff; border:none; padding:8px 12px;
+  border-radius:7px; font-size:14px;
+}
+.dark-toggle:hover{background:rgba(255,255,255,0.28);}
+
+.intro{color:var(--text3); font-size:14px; margin-bottom:22px; line-height:1.6;}
+
+/* ---------- Home view: folder tile ---------- */
+.folder-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px;}
+.folder-tile{
+  display:flex; flex-direction:column; gap:10px; background:var(--surface);
+  border:1.5px solid var(--border); border-radius:var(--radius); padding:26px;
+  cursor:pointer; transition:border-color .15s, transform .1s;
+}
+.folder-tile:hover{border-color:var(--accent-2); transform:translateY(-2px);}
+.folder-tile .folder-icon{font-size:34px; line-height:1;}
+.folder-tile h2{font-size:18px; font-weight:700; color:var(--text);}
+.folder-tile p{font-size:12.5px; color:var(--text3); line-height:1.5;}
+.folder-tile .folder-count{
+  font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--accent);
+  background:var(--accent-light); display:inline-block; padding:3px 10px; border-radius:12px; width:fit-content;
+}
+
+/* ---------- Folder view: mock list ---------- */
+.folder-header{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
+.back-link{
+  font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--accent-2);
+  cursor:pointer; font-weight:700;
+}
+.folder-title{font-size:19px; font-weight:700; color:var(--text); display:flex; align-items:center; gap:8px;}
+.folder-title span.folder-icon-inline{font-size:20px;}
+.folder-path{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--text3); margin-bottom:18px;}
+
+.mock-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; margin-bottom:28px;}
+.mock-card{
+  display:block; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius);
+  padding:22px; transition:border-color .15s, transform .1s;
+}
+.mock-card:hover{border-color:var(--accent-2); transform:translateY(-2px);}
+.mock-card .eyebrow{
+  font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.5px;
+  text-transform:uppercase; color:var(--accent-2); font-weight:700; margin-bottom:8px;
+}
+.mock-card h3{font-size:17px; font-weight:700; color:var(--text); margin-bottom:8px;}
+.mock-card p{font-size:13px; color:var(--text3); line-height:1.55; margin-bottom:14px;}
+.mock-card .stat-row{display:flex; gap:8px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--accent); flex-wrap:wrap; margin-bottom:12px;}
+.mock-card .stat-row span{background:var(--accent-light); padding:3px 8px; border-radius:5px;}
+.mock-card .open-cta{font-weight:700; font-size:12.5px; color:var(--accent-2);}
+
+.instructor-note{
+  background:var(--surface); border:1px dashed var(--border); border-radius:var(--radius);
+  padding:18px 22px; font-size:12.5px; color:var(--text2); line-height:1.6;
+}
+.instructor-note b{color:var(--accent);}
+
+footer{
+  text-align:center; margin-top:24px; font-size:11px; color:var(--text3);
+  font-family:'IBM Plex Mono',monospace; padding-bottom:20px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div class="brand-badge">PMP</div>
+    <div style="flex:1;">
+      <h1>PMP® Mock Exam Center</h1>
+      <p id="brandSub">INSTRUCTOR &amp; STUDENT PORTAL</p>
+    </div>
+    <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">🌙</button>
+  </div>
+
+  <!-- ============ HOME VIEW ============ -->
+  <div id="homeView">
+    <p class="intro">Welcome. Open the folder below to see all available mock exams. New mocks get added to this same folder over time — no new links to remember.</p>
+    <div class="folder-grid">
+      <div class="folder-tile" id="openTopicMocks">
+        <div class="folder-icon">📁</div>
+        <h2>Topic Mocks</h2>
+        <p>All PMP practice mocks, organized by topic — Agile, Comprehensive, Fundamentals, and more as they're added.</p>
+        <span class="folder-count" id="folderCount">3 mocks inside</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FOLDER VIEW ============ -->
+  <div id="folderView" class="hidden">
+    <div class="folder-header">
+      <span class="back-link" id="backToHome">&larr; Back</span>
+    </div>
+    <div class="folder-title"><span class="folder-icon-inline">📁</span> Topic Mocks</div>
+    <div class="folder-path">Home / Topic Mocks</div>
+
+    <div class="mock-grid" id="mockGrid"></div>
+
+    <div class="instructor-note">
+      <b>Instructor tip:</b> each mock has its own start password and its own "⚙ Manage exam passwords" panel inside it (behind the shared instructor password) — students never see or reach it. Share one specific mock with a student by sending them that mock's direct link plus its password.
+    </div>
+  </div>
+
+  <footer>Based on the PMP Mindset Cheat Sheet, PMP Agile Mindset Guide &amp; PMP Question Bank · ECO 2026 Aligned · For practice purposes only</footer>
+</div>
+
+<script>
+/* =====================================================================
+   TO ADD A NEW MOCK TO THE "Topic Mocks" FOLDER:
+   1. Build the new mock's standalone HTML file the same way as the
+      others (same password/retake/instructor pattern) and upload it
+      into the "Topic Mocks" folder alongside the existing ones.
+   2. Add one entry to the MOCKS array below with its title, short
+      description, stats, and the exact filename.
+   3. Re-upload this index.html. That's it — no other changes needed.
+   ===================================================================== */
+const MOCKS = [
+  {
+    file: "PMP_Agile_Mindset_Mock.html",
+    eyebrow: "Situational · Agile · ECO 2026",
+    title: "Agile Mindset Mock Exam",
+    desc: "60 situational questions covering agile roles, sprint rules, stakeholder engagement, conflict resolution, Tuckman's model, value delivery, governance, and compliance.",
+    stats: ["60 QUESTIONS", "75 MIN", "SINGLE ANSWER"]
+  },
+  {
+    file: "PMP_Comprehensive_Question_Bank_Mock.html",
+    eyebrow: "Mixed Domains · Full ECO 2026",
+    title: "PMP Comprehensive Question Bank",
+    desc: "60 questions spanning predictive, agile, and hybrid scenarios across People, Process, and Business Environment — includes multi-select items.",
+    stats: ["60 QUESTIONS", "75 MIN", "SOME MULTI-SELECT"]
+  },
+  {
+    file: "PMP_Fundamentals_BusinessEnvironment_Mock.html",
+    eyebrow: "Fundamentals · Governance · ECO 2026",
+    title: "Fundamentals & Business Environment Mock",
+    desc: "60 questions covering PMP fundamentals (project/program/portfolio, roles, org structures, agile basics, EVM) and the Business Environment domain.",
+    stats: ["60 QUESTIONS", "75 MIN", "SINGLE ANSWER"]
+  }
+  // Add future mocks here, e.g.:
+  // {
+  //   file: "PMP_Risk_Mock.html",
+  //   eyebrow: "Risk · ECO 2026",
+  //   title: "Risk Management Mock Exam",
+  //   desc: "60 questions on risk identification, analysis, and response.",
+  //   stats: ["60 QUESTIONS", "75 MIN", "SINGLE ANSWER"]
+  // },
+];
+
+const homeView = document.getElementById('homeView');
+const folderView = document.getElementById('folderView');
+const mockGrid = document.getElementById('mockGrid');
+const brandSub = document.getElementById('brandSub');
+
+document.getElementById('folderCount').textContent = `${MOCKS.length} mock${MOCKS.length===1?'':'s'} inside`;
+
+function renderMockGrid(){
+  mockGrid.innerHTML = '';
+  MOCKS.forEach(mock=>{
+    const card = document.createElement('a');
+    card.className = 'mock-card';
+    card.href = `Topic Mocks/${mock.file}`;
+    card.innerHTML = `
+      <div class="eyebrow">${mock.eyebrow}</div>
+      <h3>${mock.title}</h3>
+      <p>${mock.desc}</p>
+      <div class="stat-row">${mock.stats.map(s=>`<span>${s}</span>`).join('')}</div>
+      <div class="open-cta">Open this mock &rarr;</div>
+    `;
+    mockGrid.appendChild(card);
+  });
+}
+renderMockGrid();
+
+function openFolder(){
+  homeView.classList.add('hidden');
+  folderView.classList.remove('hidden');
+  brandSub.textContent = 'TOPIC MOCKS FOLDER';
+}
+function goHome(){
+  folderView.classList.add('hidden');
+  homeView.classList.remove('hidden');
+  brandSub.textContent = 'INSTRUCTOR & STUDENT PORTAL';
+}
+document.getElementById('openTopicMocks').addEventListener('click', openFolder);
+document.getElementById('backToHome').addEventListener('click', goHome);
+
+/* ---------- Dark mode ---------- */
+function storageGet(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
+function storageSet(key, value){ try{ localStorage.setItem(key, value); }catch(e){} }
+(function applyDarkPref(){
+  if(storageGet('pmp-dark-mode') === 'true') document.body.classList.add('dark');
+})();
+document.getElementById('darkToggle').addEventListener('click', ()=>{
+  document.body.classList.toggle('dark');
+  storageSet('pmp-dark-mode', document.body.classList.contains('dark') ? 'true' : 'false');
+});
+
+/* ---------- Deep link support: ?folder=topic-mocks opens the folder directly ---------- */
+(function handleDeepLink(){
+  try{
+    const params = new URLSearchParams(window.location.search);
+    if(params.get('folder') === 'topic-mocks') openFolder();
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
